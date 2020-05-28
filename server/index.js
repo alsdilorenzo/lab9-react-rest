@@ -5,15 +5,13 @@ const morgan = require('morgan')
 const dao = require('./dao.js')
 
 const app = express()
-const port = 3000
+const port = 3001
 app.use(morgan('tiny'))
 app.use(express.json())
 
-app.use(express.static('client'))
-app.get('/', (req, res) => res.redirect('/index.html'))
 
 //GET /tasks
-app.get('/tasks', (req, res) => {
+app.get('/api/tasks', (req, res) => {
     dao.getTasks(req.query.filter)
         .then((tasks) => {
             res.json(tasks)
@@ -26,7 +24,7 @@ app.get('/tasks', (req, res) => {
 })
 
 //GET /tasks/:taskID
-app.get('/tasks/:taskID', (req, res) => {
+app.get('/api/tasks/:taskID', (req, res) => {
     let id = req.params.taskID
     dao.getTask(id)
         .then((task) => {
@@ -43,7 +41,7 @@ app.get('/tasks/:taskID', (req, res) => {
 })
 
 //POST /tasks
-app.post('/tasks', (req, res) => {
+app.post('/api/tasks', (req, res) => {
     if (req.body) {
         dao.createTask(req.body)
             .then((id) => res.status(201).json({'id': id}))
@@ -54,7 +52,7 @@ app.post('/tasks', (req, res) => {
 })
 
 //PUT /tasks/:taskID
-app.put('/tasks/:taskID', (req, res) => {
+app.put('/api/tasks/:taskID', (req, res) => {
     let id = req.body.id
     if (id) {
         let newTask = req.body
@@ -67,7 +65,7 @@ app.put('/tasks/:taskID', (req, res) => {
 })
 
 //DELETE /tasks/:taskID
-app.delete('/tasks/:taskID', (req,res) => {
+app.delete('/api/tasks/:taskID', (req,res) => {
     dao.deleteTask(req.params.taskID)
         .then((result) => res.status(204).end())
         .catch((err) => res.status(500).json({

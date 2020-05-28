@@ -1,90 +1,99 @@
-import moment from 'moment';
+import Task from "./Task";
 
-let tasks = [
-    {
-        'id': 1,
-        'description': 'Complete Lab 8',
-        'important': true,
-        'privateTask': true,
-        'deadline': moment('2020-05-30T11:00:00'),
-        'project': 'WebApp I',
-        'completed': true
-    },
-    {
-        'id': 2,
-        'description': 'Watch Mr. Robot',
-        'important': false,
-        'privateTask': true,
-        'deadline': moment('2020-05-31T18:59:00'),
-        'project': 'Personal',
-        'completed': false
-    },
-    {
-        'id': 3,
-        'description': 'Go for a walk',
-        'important': true,
-        'privateTask': false,
-        'deadline': moment('2020-04-28T08:00:00'),
-        'project': 'Personal',
-        'completed': false
-    }];
+const baseURL = '/api';
 
-
-const isToday = (date) => {
-    return date.isSame(moment(), 'day');
+async function getTasks(filter) {
+    let url = "/tasks";
+    if (filter) {
+        const queryParams = "?filter=" + filter;
+        url += queryParams;
+    }
+    const response = await fetch(baseURL + url);
+    const tasksJson = await response.json();
+    if (response.ok) {
+        return tasksJson.map((t) => Task.from(t));
+    } else {
+        throw tasksJson;  // An object with the error coming from the server
+    }
 }
 
-const isNextWeek = (date) => {
-    const nextWeek = moment().add(1, 'weeks');
-    const tomorrow = moment().add(1, 'days');
-    return date.isAfter(tomorrow) && date.isBefore(nextWeek);
-}
-
-async function getTasks(){
-    return tasks;
-}
-
-async function getImportantTasks() {
-    return tasks.filter((t) => {
-        return t.important;
+async function addTask(task) {
+    return new Promise((resolve, reject) => {
+        fetch(baseURL + "/tasks", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(task),
+        }).then((response) => {
+            if (response.ok) {
+                resolve(null);
+            } else {
+                // analyze the cause of error
+                response.json()
+                    .then((obj) => {
+                        reject(obj);
+                    }) // error msg in the response body
+                    .catch((err) => {
+                        reject({errors: [{param: "Application", msg: "Cannot parse server response"}]})
+                    }); // something else
+            }
+        }).catch((err) => {
+            reject({errors: [{param: "Server", msg: "Cannot communicate"}]})
+        }); // connection errors
     });
 }
 
-async function getTodayTasks() {
-    return tasks.filter((t) => {
-        if(t.deadline)
-            return isToday(t.deadline);
-        else
-            return false;
+async function updateTask(task) {
+    return new Promise((resolve, reject) => {
+        fetch(baseURL + "/tasks/" + task.id, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(task),
+        }).then((response) => {
+            if (response.ok) {
+                resolve(null);
+            } else {
+                // analyze the cause of error
+                response.json()
+                    .then((obj) => {
+                        reject(obj);
+                    }) // error msg in the response body
+                    .catch((err) => {
+                        reject({errors: [{param: "Application", msg: "Cannot parse server response"}]})
+                    }); // something else
+            }
+        }).catch((err) => {
+            reject({errors: [{param: "Server", msg: "Cannot communicate"}]})
+        }); // connection errors
     });
 }
 
-async function getWeeklyTasks() {
-    return tasks.filter((t) => {
-        if(t.deadline)
-            return isNextWeek(t.deadline);
-        else
-            return false;
+
+async function deleteTask(taskId) {
+    return new Promise((resolve, reject) => {
+        fetch(baseURL + "/tasks/" + taskId, {
+            method: 'DELETE'
+        }).then((response) => {
+            if (response.ok) {
+                resolve(null);
+            } else {
+                // analyze the cause of error
+                response.json()
+                    .then((obj) => {
+                        reject(obj);
+                    }) // error msg in the response body
+                    .catch((err) => {
+                        reject({errors: [{param: "Application", msg: "Cannot parse server response"}]})
+                    }); // something else
+            }
+        }).catch((err) => {
+            reject({errors: [{param: "Server", msg: "Cannot communicate"}]})
+        }); // connection errors
     });
 }
 
-async function getPrivateTasks() {
-    return tasks.filter((t) => {
-        return t.privateTask;
-    });
-}
-
-async function getSharedTasks() {
-    return tasks.filter((t) => {
-        return !t.privateTask;
-    });
-}
-
-async function getByProject(project) {
-    return tasks.filter((t) => {
-        return t.project === project;
-    });
-}
-
-const API = { getTasks,getImportantTasks, getTodayTasks,getWeeklyTasks,getPrivateTasks,getSharedTasks, getByProject} ;
+const API = {getTasks, addTask, updateTask, deleteTask};
 export default API;

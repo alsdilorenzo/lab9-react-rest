@@ -19,7 +19,10 @@ class App extends React.Component {
     }
 
     getProjects(tasks) {
-        return [...new Set(tasks.map(t => t.project))];
+        return [...new Set(tasks.map((t) => {
+            if (t.project) return t.project
+            else return null
+        }))];
     }
 
     componentDidMount() {
@@ -37,22 +40,22 @@ class App extends React.Component {
     filterTasks = (filter, project) => {
         switch (filter) {
             case 'filter-important':
-                API.getImportantTasks().then((tasks) => this.setState({tasks: tasks, filter: 'Important'}));
+                API.getTasks('important').then((tasks) => this.setState({tasks: tasks, filter: 'Important'}));
                 break;
             case 'filter-today':
-                API.getTodayTasks().then((tasks) => this.setState({tasks: tasks, filter: 'Today'}));
+                API.getTasks('today').then((tasks) => this.setState({tasks: tasks, filter: 'Today'}));
                 break;
             case 'filter-week':
-                API.getWeeklyTasks().then((tasks) => this.setState({tasks: tasks, filter: 'Next Week'}));
+                API.getTasks('week').then((tasks) => this.setState({tasks: tasks, filter: 'Next Week'}));
                 break;
             case 'filter-private':
-                API.getPrivateTasks().then((tasks) => this.setState({tasks: tasks, filter: 'Private'}));
+                API.getTasks('private').then((tasks) => this.setState({tasks: tasks, filter: 'Private'}));
                 break;
             case 'filter-shared':
-                API.getSharedTasks().then((tasks) => this.setState({tasks: tasks, filter: 'Shared'}));
+                API.getTasks('shared').then((tasks) => this.setState({tasks: tasks, filter: 'Shared'}));
                 break;
             case 'filter-project':
-                API.getByProject(project).then((tasks) => this.setState({tasks: tasks, filter: project}));
+                API.getTasks(project).then((tasks) => this.setState({tasks: tasks, filter: project}));
                 break;
             default:
                 API.getTasks().then((tasks) => this.setState({tasks: tasks, filter: 'All'}));
@@ -61,18 +64,33 @@ class App extends React.Component {
     }
 
     addOrEditTask = (task) => {
-        this.setState((state) => {
-            // add a fake id for properly rendering the list
-            if (!task.id)
-                task.id = state.tasks.slice(-1)[0].id + 1;
-            // remove possible duplicates
-            let buildState = state.tasks.filter((t) => t.id !== task.id);
-            // add new task
-            buildState.push(task);
-            //sort tasks by id
-            buildState = buildState.sort((a, b) => a.id - b.id);
-            return {tasks: buildState};
-        });
+        if (!task.id) {
+            //ADD
+            API.addTask(task)
+                .then(() => {
+                    //get the updated list of tasks from the server
+                    API.getTasks().then((tasks) => this.setState({
+                        tasks: tasks,
+                        filter: 'All',
+                        projects: this.getProjects(tasks)
+                    }));
+                })
+                .catch((errorObj) => {
+                });
+        } else {
+            //UPDATE
+            API.updateTask(task)
+                .then(() => {
+                    //get the updated list of tasks from the server
+                    API.getTasks().then((tasks) => this.setState({
+                        tasks: tasks,
+                        filter: 'All',
+                        projects: this.getProjects(tasks)
+                    }));
+                })
+                .catch((errorObj) => {
+                });
+        }
     }
 
     editTask = (task) => {
@@ -81,7 +99,17 @@ class App extends React.Component {
     }
 
     deleteTask = (task) => {
-        this.setState((state) => ({tasks: state.tasks.filter((t) => t.id !== task.id)}));
+        API.deleteTask(task.id)
+            .then(() => {
+                //get the updated list of tasks from the server
+                API.getTasks().then((tasks) => this.setState({
+                    tasks: tasks,
+                    filter: 'All',
+                    projects: this.getProjects(tasks)
+                }));
+            })
+            .catch((errorObj) => {
+            });
     }
 
     render() {
@@ -92,13 +120,16 @@ class App extends React.Component {
                     <Row className="vheight">
                         <Collapse in={this.state.onMobile}>
                             <Col sm={3} bg="light" id="left-sidebar" className="collapse d-sm-block below">
-                                <Filters projects={this.state.projects} filterTasks={this.filterTasks}/>
+                                <Filters projects={this.state.projects} filterTasks={this.filterTasks}
+                                         activeFilter={this.state.filter}/>
                             </Col>
                         </Collapse>
                         <Col sm={9} className="below">
                             <h1>{this.state.filter}</h1>
-                            <TaskList tasks={this.state.tasks} editTask={this.editTask} deleteTask={this.deleteTask}/>
-                            <Button variant="dark" className="fixed-right-bottom" id="addButton" onClick={this.showModal}>+</Button>
+                            <TaskList tasks={this.state.tasks} editTask={this.editTask} updateTask={this.addOrEditTask}
+                                      deleteTask={this.deleteTask}/>
+                            <Button variant="dark" className="fixed-right-bottom" id="addButton"
+                                    onClick={this.showModal}>+</Button>
                         </Col>
 
                         {this.state.modalOpen && <TaskForm modalOpen={this.state.modalOpen} showModal={this.showModal}

@@ -5,7 +5,17 @@ import ListGroup from 'react-bootstrap/ListGroup';
 
 const TaskItem = (props) => {
 
-    let {task, editTask, deleteTask} = props;
+    let {task, editTask, updateTask, deleteTask} = props;
+
+    const onChangeTask = (ev, task) => {
+        if (ev.target.checked) {
+            task.completed = true;
+            updateTask(task);
+        } else {
+            task.completed = false;
+            updateTask(task);
+        }
+    }
 
     return (
         <ListGroup.Item id={task.id}>
@@ -13,7 +23,8 @@ const TaskItem = (props) => {
                 <div className="custom-control custom-checkbox">
                     <input type="checkbox"
                            className={task.important ? "custom-control-input important" : "custom-control-input"}
-                           id={"check-t" + task.id + task.important} defaultChecked={task.completed}/>
+                           id={"check-t" + task.id + task.important} defaultChecked={task.completed}
+                           onChange={(ev) => onChangeTask(ev, task)}/>
                     <label className="custom-control-label" htmlFor={"check-t" + task.id}>{task.description}</label>
                     <span className="badge-pill badge-light ml-4">{task.project}</span>
                 </div>
@@ -27,9 +38,11 @@ const TaskItem = (props) => {
                 {!task.privateTask && (
                     <img src="https://image.flaticon.com/icons/svg/615/615075.svg" width="20" height="20" alt=""/>)}
                 <div>
-                    <Image width="20" height="20" className="img-button" src="https://image.flaticon.com/icons/svg/1159/1159633.svg" alt=""
+                    <Image width="20" height="20" className="img-button"
+                           src="https://image.flaticon.com/icons/svg/1159/1159633.svg" alt=""
                            onClick={() => editTask(task)}/>
-                    <Image width="20" height="20" className="img-button" src="https://image.flaticon.com/icons/svg/833/833262.svg" alt=""
+                    <Image width="20" height="20" className="img-button"
+                           src="https://image.flaticon.com/icons/svg/833/833262.svg" alt=""
                            onClick={() => deleteTask(task)}/>
                 </div>
 
