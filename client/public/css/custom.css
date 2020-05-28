@@ -11,7 +11,7 @@
 }
 
 .navbar-light {
-    background-color: rgb(255, 255, 255) !important;
+    background-color: white !important;
     padding-top: 10px;
     padding-bottom: 13px;
     margin-bottom: 15px;
@@ -39,14 +39,16 @@ h1, h6 {
     background-color: transparent !important;
     color: slategray !important;
     font-family: "Open Sans", sans-serif !important;
-    outline: 0; !important;
+    outline: 0;
+!important;
 }
 
 .list-group-item.list-group-item-action {
     background-color: transparent !important;
     color: slategray !important;
     font-family: "Open Sans", sans-serif !important;
-    outline: 0; !important;
+    outline: 0;
+!important;
 }
 
 .list-group-item.active {
@@ -54,12 +56,14 @@ h1, h6 {
     border-top: none !important;
     border-bottom-color: slategray !important;
     color: rgb(28, 32, 36) !important;
-    outline: 0; !important;
+    outline: 0;
+!important;
 }
 
 .list-group-item:active {
     background-color: rgb(238, 238, 238) !important;
-    outline: 0; !important;
+    outline: 0;
+!important;
 }
 
 .list-group-item-action:hover {
@@ -81,15 +85,16 @@ h1, h6 {
 }
 
 .custom-checkbox .custom-control-input.important ~ .custom-control-label::before {
-    border-color: rgb(125, 255, 224);
+    border-color: rgb(146, 215, 130);
 }
 
 .custom-checkbox .custom-control-input.important:checked ~ .custom-control-label::before {
-    background-color: rgb(80, 221, 136);
+    background-color: rgb(123, 215, 73);
 }
 
 .custom-checkbox .custom-control-input.important:focus ~ .custom-control-label::before {
-    box-shadow: 0 0 0 0.2rem rgb(148, 255, 218);
+    box-shadow: 0 0 0 0.2rem rgb(171, 243, 119);
+    border-color: rgb(164, 229, 118);
 }
 
 .date {
@@ -98,8 +103,13 @@ h1, h6 {
     font-size: 12px;
 }
 
-.date.expired{
+.date.expired {
     color: #e74f4f;
+}
+
+#submitButton {
+    border-radius: 19px !important;
+    padding-bottom: 9px !important;
 }
 
 #addButton {

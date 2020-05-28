@@ -26,7 +26,7 @@ const TaskItem = (props) => {
                            id={"check-t" + task.id} defaultChecked={task.completed}
                            onChange={(ev) => toggleCheckbox(ev, task)}/>
                     <label className="custom-control-label" htmlFor={"check-t" + task.id}>{task.description}</label>
-                    <span className="badge-pill badge-light ml-4">{task.project}</span>
+                    {task.project && <span className="badge-pill badge-light ml-4">{task.project}</span>}
                 </div>
 
 

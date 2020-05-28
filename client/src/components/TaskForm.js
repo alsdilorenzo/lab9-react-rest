@@ -52,13 +52,13 @@ class TaskForm extends React.Component {
         return (
             <Modal show={this.props.modalOpen} onHide={this.props.showModal} animation={false}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Add a Task</Modal.Title>
+                    <Modal.Title>Insert Task Data</Modal.Title>
                 </Modal.Header>
                 <Form method="POST" onSubmit={(event) => this.handleSubmit(event)}>
                     <Modal.Body>
                         <Form.Group controlId="description">
                             <Form.Label>Description</Form.Label>
-                            <Form.Control type="text" name="description" placeholder="Type a description..."
+                            <Form.Control type="text" name="description" placeholder=""
                                           value={this.state.description}
                                           onChange={(ev) => this.updateField(ev.target.name, ev.target.value)} required
                                           autoFocus/>
@@ -66,7 +66,7 @@ class TaskForm extends React.Component {
 
                         <Form.Group controlId="project">
                             <Form.Label>Project</Form.Label>
-                            <Form.Control type="text" name="project" placeholder="Type a project for the task..."
+                            <Form.Control type="text" name="project" placeholder=""
                                           value={this.state.project}
                                           onChange={(ev) => this.updateField(ev.target.name, ev.target.value)}/>
                         </Form.Group>
@@ -96,7 +96,7 @@ class TaskForm extends React.Component {
 
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="outline-dark" type="submit">{this.state.id ? 'Update' : 'Add'}</Button>
+                        <Button variant="outline-dark" id="submitButton" type="submit">{this.state.id ? 'Update' : 'Add'}</Button>
                     </Modal.Footer>
                 </Form>
             </Modal>
