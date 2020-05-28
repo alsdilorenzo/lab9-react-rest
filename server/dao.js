@@ -79,7 +79,7 @@ exports.getTasks = function (filter) {
 
 exports.getTask = function (taskID) {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM tasks WHERE ID=?'
+        const sql = 'SELECT * FROM tasks WHERE id=?'
         db.get(sql, [taskID], (err, row) => {
             if (err)
                 reject(err)

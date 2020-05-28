@@ -8,11 +8,11 @@ const TaskItem = (props) => {
     let {task, editTask, updateTask, deleteTask} = props;
 
     const toggleCheckbox = (ev, task) => {
-        if (ev.target.checked === true) {
-            task.completed = false;
+        if(ev.target.checked) {
+            task.completed = true;
             updateTask(task);
         } else {
-            task.completed = true;
+            task.completed = false;
             updateTask(task);
         }
     }
@@ -23,7 +23,7 @@ const TaskItem = (props) => {
                 <div className="custom-control custom-checkbox">
                     <input type="checkbox"
                            className={task.important ? "custom-control-input important" : "custom-control-input"}
-                           id={"check-t" + task.id + task.important} defaultChecked={task.completed}
+                           id={"check-t" + task.id} defaultChecked={task.completed}
                            onChange={(ev) => toggleCheckbox(ev, task)}/>
                     <label className="custom-control-label" htmlFor={"check-t" + task.id}>{task.description}</label>
                     <span className="badge-pill badge-light ml-4">{task.project}</span>

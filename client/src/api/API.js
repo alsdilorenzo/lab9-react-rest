@@ -12,6 +12,7 @@ async function getTasks(filter) {
     const tasksJson = await response.json();
     if (response.ok) {
         return tasksJson.map((t) => Task.from(t));
+        //return tasksJson.map((t) => new Task(t.id,t.description,t.important, t.privateTask, t.project, t.deadline, t.completed));
     } else {
         throw tasksJson;  // An object with the error coming from the server
     }
