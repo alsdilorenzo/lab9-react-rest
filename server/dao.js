@@ -92,12 +92,11 @@ exports.getTask = function (taskID) {
 }
 
 exports.createTask = function (task) {
-    if(task.deadline){
-        task.deadline = moment(task.deadline);
-    }
+    if(task.deadline)
+        task.deadline = moment(task.deadline).format("YYYY-MM-DD HH:mm");
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO tasks(description, important, private, project, deadline, completed) VALUES (?,?,?,?,?,?)'
-        db.run(sql, [task.description, task.important, task.privateTask, task.project, task.deadline.format("YYYY-MM-DD HH:mm"), task.completed], function (err) {
+        const sql = 'INSERT INTO tasks(description, important, private, project, deadline, completed) VALUES (?,?,?,?,DATETIME(?),?)'
+        db.run(sql, [task.description, task.important, task.privateTask, task.project, task.deadline, task.completed], function (err) {
             if (err) {
                 console.error(err)
                 reject(err)
@@ -111,10 +110,10 @@ exports.createTask = function (task) {
 
 exports.updateTask = function (id, newTask) {
     if(newTask.deadline)
-        newTask.deadline = moment(newTask.deadline);
+        newTask.deadline = moment(newTask.deadline).format("YYYY-MM-DD HH:mm");
     return new Promise((resolve, reject) => {
-        const sql = 'UPDATE tasks SET description = ?, important = ?, private = ?, project = ?, deadline = ?, completed = ? WHERE id = ?';
-        db.run(sql, [newTask.description, newTask.important, newTask.privateTask, newTask.project, newTask.deadline.format("YYYY-MM-DD HH:mm"), newTask.completed, id], (err) => {
+        const sql = 'UPDATE tasks SET description = ?, important = ?, private = ?, project = ?, deadline = DATETIME(?), completed = ? WHERE id = ?';
+        db.run(sql, [newTask.description, newTask.important, newTask.privateTask, newTask.project, newTask.deadline, newTask.completed, id], (err) => {
             if (err) {
                 console.error(err.message)
                 reject(err)

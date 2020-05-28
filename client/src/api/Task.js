@@ -13,9 +13,9 @@ class Task {
     }
 
     static from(json) {
-        const t =  Object.assign(new Task(), json)
+        const t = Object.assign(new Task(), json)
         if (t.deadline) t.deadline = moment(new Date(t.deadline))
-        return t
+        return t;
     }
 
 }
