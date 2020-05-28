@@ -32,7 +32,7 @@ const TaskItem = (props) => {
 
                 {task.deadline && (
                     <small
-                        className={task.deadline.isBefore(moment()) ? "date expired" : "date"}>{task.deadline.format("dddd, MMMM Do YYYY, h:mm")} </small>
+                        className={task.deadline.isBefore(moment()) ? "date expired" : "date"}>{task.deadline.format("dddd, MMMM Do YYYY, h:mm a")} </small>
                 )}
 
                 {!task.privateTask && (

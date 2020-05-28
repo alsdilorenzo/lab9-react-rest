@@ -41,6 +41,7 @@ class TaskForm extends React.Component {
                 task.deadline = moment(task.deadlineDate + " " + task.deadlineTime);
             else if (task.deadlineDate !== "")
                 task.deadline = moment(task.deadlineDate);
+            else task.deadline = ''
 
             this.props.addOrEditTask(task);
             this.props.showModal();
