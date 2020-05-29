@@ -15,6 +15,7 @@
     padding-top: 10px;
     padding-bottom: 13px;
     margin-bottom: 15px;
+    border-bottom: 1px solid #e3e3e3 !important;
 }
 
 .navbar-brand {
@@ -68,6 +69,10 @@ h1, h6 {
 
 .list-group-item-action:hover {
     background-color: whitesmoke !important;
+}
+
+#sharedIcon {
+    margin-left: 6px;
 }
 
 .list-title {
@@ -133,6 +138,10 @@ input:invalid {
 
 input:focus:invalid {
     box-shadow: none;
+}
+
+.img-button {
+    margin: 2px;
 }
 
 /* img buttons */
